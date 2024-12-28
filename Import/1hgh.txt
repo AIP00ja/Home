@@ -1,0 +1,45 @@
+GridView1.AllowSorting = false;
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("content-disposition", "attachment;filename=GridViewExport.xls");
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter hw = new HtmlTextWriter(sw);
+            GridView1.AllowPaging = false;
+            this.BindGridView();
+            GridView1.HeaderRow.BackColor = Color.White;
+            foreach(TableCell cell in GridView1.HeaderRow.Cells)
+            {
+                cell.BackColor = GridView1.HeaderStyle.BackColor;
+            }
+            foreach(GridViewRow row in GridView1.Rows)
+            {
+                row.BackColor = Color.White;
+                row.Height = Unit.Pixel(110);
+                for(int i =0; i < row.Cells.Count; i++)
+                {
+                    TableCell cell = row.Cells[i];
+                    if(row.RowIndex% 2 == 0)
+                    {
+                        cell.BackColor = GridView1.AlternatingRowStyle.BackColor;
+
+                    }
+                    else
+                    {
+                        cell.BackColor = GridView1.RowStyle.BackColor;
+                    }
+                    //if (GridView1.Columns[i].HeaderStyle == "Image")
+                    //{
+                    //    System.Web.UI.WebControls.Image.imgControl=
+                    //}
+                    cell.CssClass = "textmode";
+                }
+            }
+            GridView1.Columns[0].Visible = false;
+            GridView1.Columns[8].Visible = false;
+            GridView1.Columns[9].Visible = false;
+            GridView1.RenderControl(hw);
+            Response.Output.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
